@@ -1,0 +1,87 @@
+{% comment %} {% load static %}
+<style>
+    #roomCarousel .carousel-inner {
+        max-width: 100%; /* Adjust width as needed */
+        margin: auto; /* Center align */
+    }
+
+    #roomCarousel .carousel-item img {
+        width: 100%; /* Ensure uniform size */
+        height: 450px; /* Set a fixed height */
+        object-fit: cover; /* Ensure proper aspect ratio without stretching */
+        border-radius: 10px; /* Optional: rounded corners */
+    }
+</style>
+{% include 'partials/header.html' %}
+<div class="container mt-5">
+    <div class="row">
+        
+        <div class="container">
+       
+            <!-- Bootstrap Carousel -->
+            {% if room.images.all %}
+            <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in room.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ image.image.url }}" class="d-block w-100" alt="Room Image">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Room Details (Right Side) -->
+        <div class="col-md-6 d-flex flex-column justify-content-center">
+            <h2 class="text-primary fw-bold">{{ room.subcategory.subcategory_name }}</h2>
+            <p class="text-muted">{{ room.room_details }}</p>
+
+            <ul class="list-unstyled">
+                <li><strong>📍 Location:</strong> {{ room.location.location_name }}</li>
+                <li><strong>💰 Price:</strong> ${{ room.room_rent }} / Night</li>
+                <li><strong>🛏️ Available Rooms:</strong> {{ room.available_room }}</li>
+            </ul>
+
+            <!-- Star Rating -->
+            <div class="mb-3">
+                <span class="text-warning">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-alt"></i>
+                </span>
+                <span class="text-muted">(4.5/5)</span>
+            </div>
+
+            <!-- Booking Button -->
+           
+          <button> <a class="btn btn-sm btn-primary rounded" href="{% url 'booking_page' room.id %}">Book Now</a>  </button>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .custom-carousel-btn {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .custom-carousel-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+</style> {% endcomment %}
+
+

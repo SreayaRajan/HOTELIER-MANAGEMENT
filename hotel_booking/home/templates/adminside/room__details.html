@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hotelier - Hotel HTML Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">  
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+<div class="container-xxl bg-white p-0">
+
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Header Start -->
+    {% include 'adminside/header.html' %}
+    <!-- Header End -->
+
+    <main style="padding: 30px;">
+
+        <h2 style="text-align:center; margin-bottom:30px;">Manage Rooms</h2>
+
+        <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 16px;">
+            <thead style="background-color: #f2f2f2;">
+                <tr>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Sl No.</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Location</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Subcategory</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Room Rent</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Room Details</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Room Images</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Actions</th>
+                    <th style="border: 1px solid #ddd; padding: 12px;">Discount</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for room in rooms %}
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 12px;">{{ forloop.counter }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">{{ room.location.location_name }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">{{ room.subcategory.subcategory_name }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">
+                        {% with discounted=room.get_discounted_rent %}
+                            {% if discounted != room.room_rent %}
+                                <del style="color: #999;">₹{{ room.room_rent }}</del><br>
+                                <strong style="color: gold;">₹{{ discounted|floatformat:2 }}</strong>
+                            {% else %}
+                                ₹{{ room.room_rent }}
+                            {% endif %}
+                        {% endwith %}
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">{{ room.room_details }}</td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">
+                        {% for image in room.images.all %}
+                            <img src="{{ image.image.url }}" alt="Room Image" style="width: 100px; height: auto; margin:5px;" onerror="this.style.display='none'">
+                        {% endfor %}
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_id" value="{{ room.id }}">
+                            <button type="submit" name="delete_room" style="background-color: red; color: white; border: none; padding: 8px 12px; border-radius: 5px;">Delete</button>
+                        </form>
+                    </td>
+                    <td style="border: 1px solid #ddd; padding: 12px;">
+                        {% if room.has_active_discount %}
+                            <button type="button" style="background-color: grey; color: white; border: none; padding: 8px 12px; border-radius: 5px;" disabled>Discount Applied</button>
+                        {% else %}
+                            <button type="button" style="background-color: goldenrod; color: white; border: none; padding: 8px 12px; border-radius: 5px;" onclick="openDiscountModal({{ room.id }})">Apply Discount</button>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Discount Modal -->
+        <div id="discountModal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.2); z-index:1000; width: 400px;">
+            <form method="post" action="{% url 'apply_discount' %}">
+                {% csrf_token %}
+                <input type="hidden" id="room_id" name="room_id">
+                <label>Start Date:</label><br>
+                <input type="date" name="start_date" required style="width:100%; margin-bottom: 10px;"><br>
+                <label>End Date:</label><br>
+                <input type="date" name="end_date" required style="width:100%; margin-bottom: 10px;"><br>
+                <label>Discount Percentage:</label><br>
+                <input type="number" name="discount_percentage" min="1" max="100" required style="width:100%; margin-bottom: 10px;"><br>
+                <label>Coupon Code (Optional):</label><br>
+                <input type="text" name="coupon_code" style="width:100%; margin-bottom: 20px;"><br>
+                <button type="submit" name="apply_discount" style="background-color: green; color: white; border: none; padding: 10px 20px; border-radius: 5px;">Apply</button>
+                <button type="button" onclick="closeDiscountModal()" style="background-color: red; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin-left: 10px;">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Overlay -->
+        <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.5); z-index:999;" onclick="closeDiscountModal()"></div>
+
+        <script>
+            function openDiscountModal(roomId) {
+                document.getElementById('room_id').value = roomId;
+                document.getElementById('discountModal').style.display = 'block';
+                document.getElementById('modalOverlay').style.display = 'block';
+            }
+        
+            function closeDiscountModal() {
+                document.getElementById('discountModal').style.display = 'none';
+                document.getElementById('modalOverlay').style.display = 'none';
+            }
+        </script>
+
+    </main>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
+<script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+<script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+<!-- Template Javascript -->
+<script src="{% static 'js/main.js' %}"></script> 
+</body>
+</html>

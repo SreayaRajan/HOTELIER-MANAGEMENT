@@ -1,0 +1,774 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hotelier - Hotel HTML Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">  
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+{% comment %} <style>
+    #roomCarousel .carousel-inner {
+        max-width: 100%; /* Adjust width as needed */
+        margin: auto; /* Center align */
+    }
+
+    #roomCarousel .carousel-item img {
+        width: 100%; /* Ensure uniform size */
+        height: 450px; /* Set a fixed height */
+        object-fit: cover; /* Ensure proper aspect ratio without stretching */
+        border-radius: 10px; /* Optional: rounded corners */
+    }
+     /* Modal backdrop and content styling */
+     .modal-content {
+        background: rgba(0, 0, 0, 0.85); /* semi-transparent black */
+        color: #fff;
+        border: 1px solid #ffc107; /* yellow border */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        border-radius: 15px;
+    }
+
+    .modal-header, .modal-footer {
+        border: none;
+    }
+
+    .modal-title {
+        color: #ffc107;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .modal-body label,
+    .modal-body p,
+    .modal-body input[type="radio"],
+    .modal-body input[type="checkbox"] {
+        color: #fff;
+    }
+
+    .modal-body input[type="checkbox"]:hover,
+    .modal-body input[type="radio"]:hover {
+        cursor: pointer;
+        accent-color: #ffc107;
+    }
+
+    .modal-body span {
+        color: #ffc107;
+        font-weight: 500;
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #ffc107;
+        border: none;
+        color: #000;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #ffca2c;
+        box-shadow: 0 0 10px #ffc107, 0 0 20px #ffc107;
+    }
+
+    .btn-close {
+        filter: invert(1); /* white close button */
+    }
+
+    /* Checkbox spacing */
+    .modal-body .mb-3 input {
+        margin-right: 8px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 576px) {
+        .modal-content {
+            padding: 10px;
+        }
+    }
+</style> {% endcomment %}
+<style>
+    /* Carousel styling (if used) */
+    #roomCarousel .carousel-inner {
+        max-width: 100%;
+        margin: auto;
+    }
+
+    #roomCarousel .carousel-item img {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    /* Modal Styling */
+    .modal-content {
+        background: #fff;
+        color: #000;
+        border: 2px solid #ffc107;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .modal-header, .modal-footer {
+        border: none;
+        background-color: #fffbe6;
+    }
+
+    .modal-title {
+        color: #000;
+        font-weight: 700;
+        font-size: 1.4rem;
+    }
+
+    /* Label & Paragraph Styling */
+    .modal-body label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .modal-body p {
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+
+    .modal-body span {
+        color: #d39e00;
+        font-weight: 600;
+    }
+
+    /* Purpose radio group styling */
+    .modal-body .mb-3 input[type="radio"],
+    .modal-body .mb-3 input[type="checkbox"] {
+        margin-right: 10px;
+        accent-color: #ffc107;
+        cursor: pointer;
+    }
+
+    .option-group {
+        padding: 10px 15px;
+        background: #fffdf0;
+        border: 1px solid #ffd966;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .option-group label {
+        display: block;
+        margin-top: 8px;
+        font-weight: 500;
+    }
+
+    /* Button styles */
+    .btn-primary {
+        background-color: #ffc107;
+        border: none;
+        color: #000;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #ffca2c;
+        box-shadow: 0 0 10px #ffc107, 0 0 20px #ffc107;
+    }
+
+    .btn-close {
+        filter: invert(0); /* black close icon */
+    }
+
+    .btn-secondary {
+        background-color: #e0e0e0;
+        color: #000;
+    }
+
+    @media (max-width: 576px) {
+        .modal-content {
+            padding: 10px;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+        }
+    }
+</style>
+
+<body>
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+        <!-- Header Start -->
+        {% include 'partials/header.html' %}
+        <!-- Header End -->
+
+
+       
+    <div class="container">
+       
+        <!-- Bootstrap Carousel -->
+        {% if room.images.all %}
+        <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for image in room.images.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.image.url }}" class="d-block w-100" alt="Room Image">
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Booking Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h6 class="section-title text-center text-primary text-uppercase">Room Booking</h6>
+                    <h1 class="mb-5">Book A <span class="text-primary text-uppercase">Luxury Room</span></h1>
+                </div>
+                <div class="row g-5">
+                    <div class="col-lg-6">
+                        <div class="row g-3">
+                            <div class="col-6 text-end">
+                                <img class="img-fluid rounded w-75 wow zoomIn" data-wow-delay="0.1s" src="{% static 'img/about-1.jpg' %}" style="margin-top: 25%;">
+                            </div>
+                            <div class="col-6 text-start">
+                                <img class="img-fluid rounded w-100 wow zoomIn" data-wow-delay="0.3s" src="{% static 'img/about-2.jpg' %}">
+                            </div>
+                            <div class="col-6 text-end">
+                                <img class="img-fluid rounded w-50 wow zoomIn" data-wow-delay="0.5s" src="{% static 'img/about-3.jpg' %}">
+                            </div>
+                            <div class="col-6 text-start">
+                                <img class="img-fluid rounded w-75 wow zoomIn" data-wow-delay="0.7s" src="{% static 'img/about-4.jpg' %}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="wow fadeInUp" data-wow-delay="0.2s">
+                            <form method="POST" action="{% url 'book_room' room.id %}" id="bookingForm">
+                                {% csrf_token %}
+                                <div class="row g-3">
+                                    <!-- User Info -->
+                                    {% if user.is_authenticated %}
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="name" placeholder="Your Name" value="{{ user.username }}" readonly>
+                                                <label for="name">Your Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="number" placeholder="Phone Number" value="{{ user.number }}" readonly>
+                                                <label for="number">Phone Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="email" class="form-control" id="email" value="{{ user.email }}" readonly>
+                                                <label for="email">Email</label>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <!-- Non-authenticated users fill in their details -->
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                                <label for="name">Your Name</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="number" placeholder="Phone Number">
+                                                <label for="number">Phone Number</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                <input type="email" class="form-control" id="email" placeholder="Email" required>
+                                                <label for="email">Email</label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Room Info -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" value="{{ room.location.location_name }}" readonly>
+                                            <label>Location</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" value="{{ room.subcategory.category.category_name }}" readonly>
+                                            <label>Category</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" value="{{ room.subcategory.subcategory_name }}" readonly>
+                                            <label>Subcategory</label>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="amount" value="${{ room.room_rent }}" readonly>
+                                            <label for="amount">Amount</label>
+                                        </div>
+                                    </div> -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            {% with discounted=room.get_discounted_rent %}
+                                                {% if discounted != room.room_rent %}
+                                                    <input type="text" class="form-control" id="amount"
+                                                           value="₹{{ discounted|floatformat:2 }}" readonly>
+                                                    <label for="amount">Amount</label>
+                                                    <small>
+                                                        <del style="color: #888;">₹{{ room.room_rent }}</del>
+                                                        <span class="badge bg-success">{{ room.get_active_discount_percentage }}% OFF</span>
+                                                    </small>
+                                                {% else %}
+                                                    <input type="text" class="form-control" id="amount"
+                                                           value="₹{{ room.room_rent }}" readonly>
+                                                    <label for="amount">Amount</label>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                    <small class="text-muted"><i class="fa fa-bed text-primary me-2"></i>{{ room.available_room }} available rooms</small>
+                                    
+                                    <!-- Dates -->
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="date" class="form-control" id="checkin" name="checkin" required>
+                                            <label for="checkin">Check-In</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="date" class="form-control" id="checkout" name="checkout" required>
+                                            <label for="checkout">Check-Out</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", function () {
+                                            const checkinInput = document.getElementById("checkin");
+                                            const checkoutInput = document.getElementById("checkout");
+                                    
+                                            // Get today's date in yyyy-mm-dd format
+                                            const today = new Date().toISOString().split("T")[0];
+                                    
+                                            // Set min attribute so past dates can't be selected
+                                            checkinInput.min = today;
+                                            checkoutInput.min = today;
+                                    
+                                            // Optional: Auto-update checkout min date after selecting checkin
+                                            checkinInput.addEventListener("change", function () {
+                                                const selectedCheckin = checkinInput.value;
+                                                checkoutInput.min = selectedCheckin;
+                                            });
+                                        });
+                                         
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const checkinInput = document.getElementById('checkin');
+                                            const checkoutInput = document.getElementById('checkout');
+                                            const amountInput = document.getElementById('amount');
+                                            const modalAmount = document.getElementById('modalAmount');
+                                            const modalDays = document.getElementById('modalDays');
+                                        
+                                            // Parse the original room rent (remove ₹ and convert to float)
+                                            let originalRent = parseFloat(amountInput.value.replace(/[₹$,]/g, '').trim());
+                                        
+                                            // Function to calculate the amount based on selected dates
+                                            function calculateAmount() {
+                                                const checkinDate = new Date(checkinInput.value);
+                                                const checkoutDate = new Date(checkoutInput.value);
+                                        
+                                                // Only proceed if both dates are valid and checkout is after checkin
+                                                if (checkinInput.value && checkoutInput.value && checkoutDate > checkinDate) {
+                                                    const timeDifference = checkoutDate - checkinDate;
+                                                    const numberOfDays = timeDifference / (1000 * 3600 * 24);
+                                                    const totalAmount = originalRent * numberOfDays;
+                                        
+                                                    amountInput.value = `₹${totalAmount.toFixed(2)}`;
+                                                }
+                                            }
+                                        
+                                            // Only trigger calculation when checkout is changed
+                                            checkoutInput.addEventListener('change', calculateAmount);
+                                        
+                                            // "Book Now" button logic to pass data to modal
+                                            const payNowButton = document.querySelector('button[data-bs-target="#bookingModal"]');
+                                            if (payNowButton) {
+                                                payNowButton.addEventListener('click', function () {
+                                                    const checkinDate = new Date(checkinInput.value);
+                                                    const checkoutDate = new Date(checkoutInput.value);
+                                                    const numberOfDays = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+                                        
+                                                    modalAmount.textContent = amountInput.value;
+                                                    modalDays.textContent = isNaN(numberOfDays) ? '0' : numberOfDays;
+                                                });
+                                            }
+                                        });
+                                        
+                                        // Dummy payment function
+                                        function startPayment() {
+                                            const amount = document.getElementById('modalAmount').textContent;
+                                            alert("Proceeding to payment for the amount: " + amount);
+                                        }
+                                        </script>
+                                        
+                                    <!-- Button to open modal -->
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary w-100 py-3" data-bs-toggle="modal" data-bs-target="#bookingModal">
+                                Book Now
+                            </button>
+                        </div>
+
+                          <!-- Modal -->
+                <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bookingModalLabel">Booking Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                
+
+                                <!-- Purpose of booking -->
+                                        <label for="purpose">Purpose of Booking</label>
+                                        <div class="mb-3">
+                                            <input type="radio" id="travel" name="purpose" value="travel"> Travel
+                                            <input type="radio" id="party" name="purpose" value="party"> Party/Celebration
+                                            <input type="radio" id="others" name="purpose" value="others"> Others
+                                        </div>
+
+                                        <!-- Travel options -->
+                                        <div id="travelOptions" class="d-none">
+                                            <label>Do you want Guide?</label>
+                                            <input type="checkbox" id="guide" value="1000"> Guide (1000rs/day)
+                                            <br>
+                                            <label>Do you want Vehicle?</label>
+                                            <input type="checkbox" id="vehicle" value="1000"> Vehicle (1000rs/day)
+                                        </div>
+
+                                        <!-- Party options -->
+                                        <div id="partyOptions" class="d-none">
+                                            <label>Party Type</label><br>
+                                            <input type="radio" name="party_type" id="indoor" value="indoor"> Indoor
+                                            <input type="radio" name="party_type" id="outdoor" value="outdoor"> Outdoor
+
+                                            <!-- Indoor options -->
+                                            <div id="indoorOptions" class="d-none mt-2">
+                                                <label>Number of People</label><br>
+                                                <input type="radio" name="indoor_people" value="100"> 100 People - ₹10000<br>
+                                                <input type="radio" name="indoor_people" value="150"> 150 People - ₹15000<br>
+                                                <input type="radio" name="indoor_people" value="200"> 200 People - ₹20000<br>
+                                            </div>
+
+                                            <!-- Outdoor options -->
+                                            <div id="outdoorOptions" class="d-none mt-2">
+                                                <label>Select Place</label><br>
+                                                <input type="radio" name="outdoor_place" value="beach"> Beach - ₹25000<br>
+                                                <input type="radio" name="outdoor_place" value="courtyard"> Courtyard - ₹20000<br>
+                                            </div>
+                                        </div>
+
+                                        <!-- Additional packages (for all) -->
+                                        <div id="additionalPackages" class="d-none">
+                                            <label for="additionalPackages">Would you like any additional packages?</label>
+                                            <div class="mb-3">
+                                                <input type="checkbox" id="gym" value="2000"> Gym & Yoga, Spa & Fitness (2000rs/day)
+                                            </div>
+                                        </div>
+
+
+                                    <script>
+                                
+                                        document.addEventListener('DOMContentLoaded', function () {
+                                            const travelOption = document.getElementById('travel');
+                                            const partyOption = document.getElementById('party');
+                                            const othersOption = document.getElementById('others');
+                                        
+                                            const travelOptionsDiv = document.getElementById('travelOptions');
+                                            const additionalPackagesDiv = document.getElementById('additionalPackages');
+                                            const partyOptionsDiv = document.getElementById('partyOptions');
+                                        
+                                            const indoorOption = document.getElementById('indoor');
+                                            const outdoorOption = document.getElementById('outdoor');
+                                            const indoorOptionsDiv = document.getElementById('indoorOptions');
+                                            const outdoorOptionsDiv = document.getElementById('outdoorOptions');
+                                        
+                                            function handlePurposeChange() {
+                                                if (travelOption.checked) {
+                                                    travelOptionsDiv.classList.remove('d-none');
+                                                    partyOptionsDiv.classList.add('d-none');
+                                                    additionalPackagesDiv.classList.remove('d-none');
+                                                } else if (partyOption.checked) {
+                                                    partyOptionsDiv.classList.remove('d-none');
+                                                    travelOptionsDiv.classList.add('d-none');
+                                                    additionalPackagesDiv.classList.add('d-none');  // Optional
+                                                } else {
+                                                    travelOptionsDiv.classList.add('d-none');
+                                                    partyOptionsDiv.classList.add('d-none');
+                                                    additionalPackagesDiv.classList.add('d-none');
+                                                }
+                                            }
+                                        
+                                            function handlePartyTypeChange() {
+                                                if (indoorOption.checked) {
+                                                    indoorOptionsDiv.classList.remove('d-none');
+                                                    outdoorOptionsDiv.classList.add('d-none');
+                                                } else if (outdoorOption.checked) {
+                                                    outdoorOptionsDiv.classList.remove('d-none');
+                                                    indoorOptionsDiv.classList.add('d-none');
+                                                }
+                                            }
+                                        
+                                            travelOption.addEventListener('change', handlePurposeChange);
+                                            partyOption.addEventListener('change', handlePurposeChange);
+                                            othersOption.addEventListener('change', handlePurposeChange);
+                                        
+                                            indoorOption.addEventListener('change', handlePartyTypeChange);
+                                            outdoorOption.addEventListener('change', handlePartyTypeChange);
+                                        });
+                                        
+                                    </script>
+
+                                                                    <!-- Amount Details -->
+                                    <p>Base Amount: <span id="modalAmount"></span></p>
+                                    <p>Days: <span id="modalDays"></span></p>
+                                    <p>Guide Amount: <span id="guideAmount">₹0</span></p>
+                                    <p>Vehicle Amount: <span id="vehicleAmount">₹0</span></p>
+                                    <p>Additional Packages: <span id="additionalAmount">₹0</span></p>
+                                    <p>Party Charges: <span id="partyAmount">₹0</span></p>
+                                    <h5>Total Amount: <span id="totalAmount"></span></h5>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary w-100 py-3" onclick="startPayment()">Pay Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const checkinInput = document.getElementById('checkin');
+                        const checkoutInput = document.getElementById('checkout');
+                        const amountInput = document.getElementById('amount');
+                        const modalAmount = document.getElementById('modalAmount');
+                        const modalDays = document.getElementById('modalDays');
+                        const totalAmount = document.getElementById('totalAmount');
+                    
+                        const guideCheckbox = document.getElementById('guide');
+                        const vehicleCheckbox = document.getElementById('vehicle');
+                        const gymCheckbox = document.getElementById('gym');
+                    
+                        const guideAmount = document.getElementById('guideAmount');
+                        const vehicleAmount = document.getElementById('vehicleAmount');
+                        const additionalAmount = document.getElementById('additionalAmount');
+                        const partyAmount = document.getElementById('partyAmount');
+                    
+                        const travelOptions = document.getElementById('travelOptions');
+                        const travelRadio = document.getElementById('travel');
+                    
+                        const indoorPeopleRadios = document.querySelectorAll('input[name="indoor_people"]');
+                        const outdoorPlaceRadios = document.querySelectorAll('input[name="outdoor_place"]');
+                    
+                        let roomRent = parseFloat(amountInput.value.replace('₹', '').trim());
+                        let selectedPartyAmount = 0;  // ✅ Keep track of party charges separately
+                    
+                        function calculateAmount() {
+                            const checkinDate = new Date(checkinInput.value);
+                            const checkoutDate = new Date(checkoutInput.value);
+                            if (checkinInput.value && checkoutInput.value && checkoutDate > checkinDate) {
+                                const days = (checkoutDate - checkinDate) / (1000 * 3600 * 24);
+                                modalDays.textContent = days;
+                                modalAmount.textContent = `₹${(roomRent * days).toFixed(2)}`;
+                                updateTotalAmount();
+                            }
+                        }
+                    
+                        function updateTotalAmount() {
+                            let days = parseInt(modalDays.textContent) || 0;
+                            let guideCost = guideCheckbox.checked ? parseInt(guideCheckbox.value) * days : 0;
+                            let vehicleCost = vehicleCheckbox.checked ? parseInt(vehicleCheckbox.value) * days : 0;
+                            let additionalCost = gymCheckbox.checked ? parseInt(gymCheckbox.value) * days : 0;
+                    
+                            let baseCost = roomRent * days;
+                            let total = baseCost + guideCost + vehicleCost + additionalCost + selectedPartyAmount;
+                    
+                            guideAmount.textContent = `₹${guideCost}`;
+                            vehicleAmount.textContent = `₹${vehicleCost}`;
+                            additionalAmount.textContent = `₹${additionalCost}`;
+                            partyAmount.textContent = `₹${selectedPartyAmount}`;
+                            totalAmount.textContent = `₹${total.toFixed(2)}`;
+                        }
+                    
+                        function handleIndoorSelection() {
+                            selectedPartyAmount = 0;
+                            indoorPeopleRadios.forEach(radio => {
+                                if (radio.checked) {
+                                    selectedPartyAmount = parseInt(radio.value) === 100 ? 10000 :
+                                                         parseInt(radio.value) === 150 ? 15000 :
+                                                         parseInt(radio.value) === 200 ? 20000 : 0;
+                                }
+                            });
+                            updateTotalAmount();
+                        }
+                    
+                        function handleOutdoorSelection() {
+                            selectedPartyAmount = 0;
+                            outdoorPlaceRadios.forEach(radio => {
+                                if (radio.checked) {
+                                    selectedPartyAmount = radio.value === 'beach' ? 25000 :
+                                                         radio.value === 'courtyard' ? 20000 : 0;
+                                }
+                            });
+                            updateTotalAmount();
+                        }
+                    
+                        checkinInput.addEventListener('change', calculateAmount);
+                        checkoutInput.addEventListener('change', calculateAmount);
+                        guideCheckbox.addEventListener('change', updateTotalAmount);
+                        vehicleCheckbox.addEventListener('change', updateTotalAmount);
+                        gymCheckbox.addEventListener('change', updateTotalAmount);
+                    
+                        indoorPeopleRadios.forEach(radio => {
+                            radio.addEventListener('change', handleIndoorSelection);
+                        });
+                    
+                        outdoorPlaceRadios.forEach(radio => {
+                            radio.addEventListener('change', handleOutdoorSelection);
+                        });
+                    
+                        travelRadio.addEventListener('change', function () {
+                            travelOptions.classList.remove('d-none');
+                        });
+                    
+                        // Initial call
+                        calculateAmount();
+                    });
+                    </script>
+                    
+
+        <!-- Razorpay Script -->
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+            function startPayment() {
+        const bookingForm = document.getElementById('bookingForm');
+        const formData = new FormData(bookingForm);
+
+        // Append dynamic selections
+        const guide = document.getElementById('guide').checked;
+        const vehicle = document.getElementById('vehicle').checked;
+        const gym = document.getElementById('gym').checked;
+
+        formData.append('guide', guide ? 'on' : '');
+        formData.append('vehicle', vehicle ? 'on' : '');
+        formData.append('gym', gym ? 'on' : '');
+
+        const roomId = "{{ room.id }}";
+        if (!roomId) {
+            alert("Invalid Room ID");
+            return;
+        }
+
+        fetch("{% url 'book_room' room.id %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            const options = {
+                "key": data.razorpay_key,
+                "amount": data.totalAmount * 100,
+                "currency": data.currency,
+                "name": "Hotel Booking",
+                "description": "Room Booking Payment",
+                "order_id": data.razorpay_order_id,
+                "handler": function (response) {
+                    window.location.href = "/booking-success/" + data.booking_id + "/";
+
+
+                },
+                "theme": { "color": "#3399cc" }
+            };
+
+            const rzp1 = new Razorpay(options);
+            rzp1.open();
+        })
+        .catch(error => console.error("Error:", error));
+    }
+        </script>
+      
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+    <script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+</body>
+
+</html>

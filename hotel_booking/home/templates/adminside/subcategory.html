@@ -1,0 +1,134 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Subcategory</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        header { background: #212121; color: white; padding: 20px; text-align: center; }
+        main { padding: 20px; text-align: center; }
+        form { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: white; padding: 20px; border-radius: 10px; width: 60%; margin: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        input[type="text"] { padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 6px; }
+        button { padding: 10px 15px; background-color: orange; color: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        th, td { padding: 12px; text-align: center; border-bottom: 1px solid #ddd; }
+        th { background-color: #212121; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Manage Subcategory for "{{ category.category_name }}" (Location: {{ category.location_name.location_name }})</h1>
+    </header>
+
+    <main>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="subcategory_name" placeholder="Enter Subcategory Name" required>
+            <button type="submit">Add Subcategory</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>Sl No.</th>
+                <th>Subcategory Name</th>
+            </tr>
+            {% for subcategory in subcategories %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ subcategory.subcategory_name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
+</body>
+</html> {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Management Subcategory</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        header { display: flex; justify-content: space-between; align-items: center; background: #212121; color: white; padding: 20px; }
+        nav ul { display: flex; list-style: none; padding: 0; }
+        nav ul li { margin-right: 20px; }
+        nav ul li a { color: white; text-decoration: none; font-weight: bold; }
+        .logout { background: orange; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 6px; }
+        main { padding: 20px; text-align: center; }
+        form { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; background: white; padding: 20px; border-radius: 10px; width: 80%; margin: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        select, input[type="text"] { padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 6px; }
+        button { padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .submit { background-color: orange; color: white; }
+        table { width: 90%; margin: 20px auto; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        th, td { padding: 12px; text-align: center; border-bottom: 1px solid #ddd; }
+        th { background-color: #212121; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        .action-buttons { display: flex; justify-content: center; gap: 8px; }
+    </style>
+</head>
+<body>
+     <header>
+        <h1>HOTELIER</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'dashboard' %}" class="nav-item nav-link active">Home</a></li>
+                <li><a href="{% url 'room_rate' %}" class="nav-item nav-link">Bookings</a></li>
+                <li><a href="{% url 'manage_location' %}" class="nav-item nav-link">Locations</a></li>
+                <li>  <a href="{% url 'manage_category' %}" class="nav-item nav-link">Categories</a></li>
+            </ul>
+        </nav>
+        <button class="logout">Logout</button>
+    </header> 
+    {% comment %} {% include 'adminside/header.html' %} {% endcomment %}
+    <main>
+        <h2>ADMIN MANAGEMENT SUBCATEGORY</h2>
+        <form method="post">
+            {% csrf_token %}
+            <select name="location_id" disabled>
+                <option value="{{ category.location_name.id }}">{{ category.location_name.location_name }}</option>
+            </select>
+            <select name="category_id" disabled>
+                <option value="{{ category.id }}">{{ category.category_name }}</option>
+            </select>
+            <input type="text" name="subcategory_name" placeholder="Enter Subcategory Name" required>
+            <button type="submit" name="add_subcategory" class="submit">Add Subcategory</button>
+        </form>
+
+        <table>
+            <tr>
+                <th>Sl No.</th>
+                <th>Location Name</th>
+                <th>Category Name</th>
+                <th>Subcategory Name</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+            {% for subcategory in subcategories %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ subcategory.category.location_name.location_name }}</td>
+                <td>{{ subcategory.category.category_name }}</td>
+                <td>{{ subcategory.subcategory_name }}</td>
+                <td>
+                    <form method="post" class="action-buttons">
+                        {% csrf_token %}
+                        <input type="hidden" name="subcategory_id" value="{{ subcategory.id }}">
+                        <input type="text" name="subcategory_name" value="{{ subcategory.subcategory_name }}" required>
+                        <button type="submit" name="update_subcategory" class="submit">Update</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_id" value="{{ subcategory.id }}">
+                        <button type="submit" name="delete_subcategory" class="submit" style="background-color: red;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
+</body>
+</html>

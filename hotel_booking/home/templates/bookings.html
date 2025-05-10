@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .booking-wrapper {
+    background-color: #121212;
+    color: #facc15;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px 0;
+  }
+
+  .booking-wrapper h2 {
+    text-align: center;
+    color: #facc15;
+    margin: 0 0 20px;
+  }
+
+  .booking-wrapper table {
+    width: 90%;
+    margin: 0 auto 40px auto;
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    box-shadow: 0 0 10px #facc15;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .booking-wrapper thead {
+    background-color: #333333;
+  }
+
+  .booking-wrapper th, .booking-wrapper td {
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid #2d2d2d;
+  }
+
+  .booking-wrapper th {
+    color: #facc15;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  .booking-wrapper td {
+    color: #e5e5e5;
+    font-size: 15px;
+  }
+
+  .booking-wrapper tr:hover {
+    background-color: #2a2a2a;
+  }
+
+  .booking-wrapper p {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 40px;
+    color: #facc15;
+  }
+  .pagination a {
+  color: #facc15;
+  padding: 8px 14px;
+  margin: 0 5px;
+  border: 1px solid #facc15;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.pagination span {
+  color: #e5e5e5;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.pagination a:hover {
+  background-color: #facc15;
+  color: #121212;
+}
+
+</style>
+
+<div class="booking-wrapper">
+  <h2>My Bookings</h2>
+
+  {% if bookings %}
+    <table>
+      <thead>
+        <tr>
+           <th>No</th> 
+          <th>Room</th>
+          
+          <th>Subcategory</th>
+          <th>Location</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Amount</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Action</th>
+          <th>Nearby</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+           
+            <td>{{ booking.room }}</td>
+
+            <!-- <td>{{ booking.category.category_name }}</td> -->
+            <td>{{ booking.subcategory.subcategory_name }}</td>
+            <td>{{ booking.location.location_name}}</td>
+            <td>{{ booking.checkin }}</td>
+            <td>{{ booking.checkout }}</td>
+            <td>₹{{ booking.amount }}</td>
+            <td>{{ booking.payment_method|title }}</td>
+            <td>{{ booking.status}}</td>
+            <td>
+              {% if booking.status == "booked" %}
+                <form action="{% url 'cancel_booking' booking.id %}" method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                  
+                </form>
+                <td>
+                  <a href="{% url 'location_recommendations' booking.id %}" class="btn btn-info btn-sm">
+                    Spots
+                  </a>
+                  </td>
+              {% elif booking.status == "checked_out" %}
+              <a href="{% url 'download_invoice' booking.booking_id %}" class="btn btn-success btn-sm">
+                Download Invoice
+            </a>
+            
+              {% else %}
+                ---
+              {% endif %}
+            </td>
+            
+            
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if bookings.has_other_pages %}
+  <div style="text-align: center; margin-top: 20px;" class="pagination">
+    {% if bookings.has_previous %}
+      <a href="?page=1" style="margin: 0 5px;">First</a>
+      <a href="?page={{ bookings.previous_page_number }}" style="margin: 0 5px;">Previous</a>
+    {% endif %}
+
+    <span style="color: #e5e5e5;">Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}</span>
+
+    {% if bookings.has_next %}
+      <a href="?page={{ bookings.next_page_number }}" style="margin: 0 5px;">Next</a>
+      <a href="?page={{ bookings.paginator.num_pages }}" style="margin: 0 5px;">Last</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+  {% else %}
+    <p>No bookings found.</p>
+  {% endif %}
+</div>
+{% endblock %}

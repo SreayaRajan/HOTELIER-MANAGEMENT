@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  .booking-success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background-color: #1a1a1a;
+    padding: 40px 20px;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .booking-card {
+    background-color: #262626;
+    border: 1px solid #facc15;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(250, 204, 21, 0.2);
+    padding: 40px;
+    max-width: 600px;
+    width: 100%;
+    text-align: left;
+    color: #e5e5e5;
+  }
+
+  .booking-card h2 {
+    color: #facc15;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  .booking-card p {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    border-bottom: 1px dashed #3a3a3a;
+    padding-bottom: 5px;
+  }
+
+  .booking-card p strong {
+    color: #facc15;
+  }
+
+  .booking-card .thank-you {
+    margin-top: 30px;
+    font-style: italic;
+    color: #b3b3b3;
+  }
+
+  .booking-card .btn-home {
+    display: inline-block;
+    background-color: #facc15;
+    color: #121212;
+    padding: 10px 24px;
+    margin-top: 25px;
+    font-size: 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .booking-card .btn-home:hover {
+    background-color: #e0b400;
+  }
+</style>
+
+<div class="booking-success-container">
+  <div class="booking-card">
+    <h2>Hi {{ user.username }},</h2>
+    <p><strong>Room:</strong> {{ booking.subcategory.subcategory_name }}</p>
+    <p><strong>Location:</strong> {{ booking.location.location_name }}</p>
+    <p><strong>Check-in:</strong> {{ booking.checkin }}</p>
+    <p><strong>Check-out:</strong> {{ booking.checkout }}</p>
+    <p><strong>Total Amount:</strong> ₹{{ booking.amount }}</p>
+
+    
+
+    <p class="thank-you">Thank you for choosing us. We look forward to hosting you ! - Hotel Booking Team
+    </p>
+    
+
+    <a href="{% url 'index' %}" class="btn-home">Go to Home</a>
+  </div>
+</div>
+{% endblock %}
+
+

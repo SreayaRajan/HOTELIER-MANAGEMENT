@@ -1,0 +1,40 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'chatbot/styles.css' %}">
+
+<center style="margin-top: 5%; margin-bottom: 20%;">
+    <div id="chatContainer">
+        <h1>Chat with Bot</h1>
+        <div id="chatWindow" class="chat-window"></div>
+        <textarea id="message" placeholder="Type a message" rows="3"></textarea>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById('message').value;
+            const response = await fetch("{% url 'chat_bot' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({message: message})
+            });
+            const data = await response.json();
+            displayMessage('User', message);
+            displayMessage('Bot', data.response);
+            document.getElementById('message').value = '';
+        }
+
+        function displayMessage(sender, text) {
+            const chatWindow = document.getElementById('chatWindow');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender.toLowerCase();
+            messageDiv.innerText = sender + ': ' + text;
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+    </script>
+</center>
+

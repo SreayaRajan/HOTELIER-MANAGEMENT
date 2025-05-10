@@ -1,0 +1,254 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hotelier - Hotel HTML Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">  
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+ 
+
+    <div class="container-xxl bg-white p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+        <!-- Header Start -->
+        {% include 'adminside/header.html' %}
+        </div>
+        <style>
+            .booking-wrapper {
+              background-color: #121212;
+              color: #facc15;
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              padding: 40px 20px;
+            }
+          
+            .booking-wrapper h2 {
+              text-align: center;
+              margin-bottom: 30px;
+              font-size: 2rem;
+            }
+          
+            .booking-wrapper table {
+              width: 90%;
+              margin: auto;
+              border-collapse: collapse;
+              background-color: #1e1e1e;
+              box-shadow: 0 0 10px #facc15;
+              border-radius: 10px;
+            }
+          
+            .booking-wrapper th, .booking-wrapper td {
+              padding: 12px 15px;
+              text-align: center;
+              border-bottom: 1px solid #333;
+            }
+          
+            .booking-wrapper th {
+              background-color: #333;
+              color: #facc15;
+              text-transform: uppercase;
+            }
+          
+            .booking-wrapper td {
+              color: #e5e5e5;
+            }
+          
+            .booking-wrapper tr:hover {
+              background-color: #2a2a2a;
+            }
+          
+            .booking-wrapper p {
+              text-align: center;
+              font-size: 1.2rem;
+              color: #facc15;
+            }
+            .pagination a {
+  color: #facc15;
+  padding: 8px 14px;
+  margin: 0 5px;
+  border: 1px solid #facc15;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.pagination span {
+  color: #e5e5e5;
+  font-weight: bold;
+  padding: 8px;
+}
+
+.pagination a:hover {
+  background-color: #facc15;
+  color: #121212;
+}
+
+          </style>
+          
+        <div class="booking-wrapper">
+            <h2>My Bookings</h2>
+            <div style="text-align: right; margin-bottom: 20px;">
+              <form method="GET" action="">
+                <select name="location" onchange="this.form.submit()">
+                  <option value="">All Locations</option>
+                  {% for location in locations %}
+                    <option value="{{ location.id }}" {% if selected_location_id == location.id %}selected{% endif %}>
+                      {{ location.location_name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </form>
+            </div>
+            
+            
+            {% if bookings %}
+              <table>
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Customer Name  </th>
+                    <th>Room</th>
+                    <th>Location</th>
+                    {% comment %} <th>Category</th> {% endcomment %}
+                    <th>Subcategory</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Guide</th>
+                    <th>Vehicle</th>
+                    <th>Gym</th>
+                    <th>status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for booking in bookings %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ booking.user.username }}</td>
+                    <td>{{ booking.room }}</td>
+                    <td>{{ booking.location.location_name }}</td>
+                    {% comment %} <td>{{ booking.category.category_name }}</td> {% endcomment %}
+                    <td>{{ booking.subcategory.subcategory_name }}</td>
+                    <td>{{ booking.checkin }}</td>
+                    <td>{{ booking.checkout }}</td>
+                    <td>₹{{ booking.amount }}</td>
+                    <td>{{ booking.payment_method }}</td>
+                    <td>{{ booking.guide|yesno:"Yes,No" }}</td>
+                    <td>{{ booking.vehicle|yesno:"Yes,No" }}</td>
+                    <td>{{ booking.gym|yesno:"Yes,No" }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'update_booking_status' booking.id %}">
+
+                          {% csrf_token %}
+                          <select name="status" onchange="this.form.submit()">
+                            <option value="booked" {% if booking.status == 'booked' %}selected{% endif %}>Booked</option>
+                            <option value="checked_in" {% if booking.status == 'checked_in' %}selected{% endif %}>Checked In</option>
+                            <option value="checked_out" {% if booking.status == 'checked_out' %}selected{% endif %}>Checked Out</option>
+                            <option value="cancelled" {% if booking.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                          </select>
+                        </form>
+                      </td>
+                      
+                      
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              <!-- Pagination controls -->
+{% if bookings.has_other_pages %}
+<div class="pagination" style="text-align: center; margin-top: 20px;">
+    {% if bookings.has_previous %}
+      <a href="?page={{ bookings.previous_page_number }}">« Previous</a>
+    {% endif %}
+
+    {% for num in bookings.paginator.page_range %}
+      {% if bookings.number == num %}
+        <span><strong>{{ num }}</strong></span>
+      {% elif num > bookings.number|add:'-3' and num < bookings.number|add:'3' %}
+        <a href="?page={{ num }}">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if bookings.has_next %}
+      <a href="?page={{ bookings.next_page_number }}">Next »</a>
+    {% endif %}
+</div>
+{% endif %}
+
+            {% else %}
+              <p>You have no bookings yet.</p>
+            {% endif %}
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Footer Start -->
+  
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+<script src="{% static 'lib/tempusdominus/js/moment.min.js' %}"></script>
+<script src="{% static 'lib/tempusdominus/js/moment-timezone.min.js' %}"></script>
+<script src="{% static 'lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js' %}"></script>
+
+<!-- Template Javascript -->
+<script src="{% static 'js/main.js' %}"></script> 
+</body>
+
+</html>         
